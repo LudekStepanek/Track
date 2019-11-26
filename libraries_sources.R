@@ -5,7 +5,7 @@ library(XML)
 library(xml2)
 library(tidyverse)
 library(cluster)
-library(pracma)
+
 
 source("import_data.R")
 source("geometry_functions.R")

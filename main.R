@@ -2,8 +2,10 @@
 
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_starved\\"
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\ts_sample\\"
+data_folder <- "K:\\t_sample\\"
 
-setwd("C:\\Users\\Ludek\\Documents\\R\\track\\")
+
+setwd("C:\\Users\\Ludek\\Documents\\R\\Track\\")
 
 source("libraries_sources.R")
 
