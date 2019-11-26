@@ -55,5 +55,38 @@ read_input_data <- function(path) {
   data_raw[, Track := .GRP, by = .(File, Track)]
   na.omit(data_raw)
 }
-           
  
+#--------- main import function; optionally loads/saves the data and formats them into the nested data.table----------          
+import_tracks <- function(path, Load = FALSE) {
+  
+  if (Load) {         
+    started.at <- proc.time()
+    data_imported <- readRDS(paste0(path, "data_imported.sav"))
+    cat("Data loaded", timetaken(started.at), "\n")
+  }
+  
+  else {
+    started.at <- proc.time()
+    data_imported <- read_input_data(path)
+    cat("Data imported", timetaken(started.at), "\n")
+    
+    started.at <- proc.time()
+    saveRDS(data_imported, paste0(path, "data_imported.sav"))
+    cat("Data saved", timetaken(started.at), "\n")
+  }
+  
+  started.at <- proc.time()
+  
+  tracks <-  data_imported[, .(t = list(t/1000),
+                               x = list(x * pixel_size),
+                               y = list(y * pixel_size), 
+                               n = .N, 
+                               File = data.table::first(File)
+                               ), 
+                             by = Track
+                           ] 
+  
+  cat("Data processed", timetaken(started.at), "\n")
+  
+  return(tracks)
+} 
