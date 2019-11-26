@@ -12,4 +12,5 @@ source("geometry_functions.R")
 source("douglas_peucker.R")
 source("marginal_histogram.R")
 source("add_attributes.R")
+source("visualize.R")
 
