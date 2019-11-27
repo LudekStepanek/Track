@@ -1,5 +1,5 @@
 #----tracks in bins plot -----------
-print_tracks_by_quantile <- function(tracks){
+print_tracks_by_quantile <- function(tracks, quant = 0.01){
 
 
 list_of_plots <- tracks[n>50,
@@ -12,7 +12,7 @@ list_of_plots <- tracks[n>50,
                )
                ][,
                  `:=`(bin_shape=findInterval(unlist(Shape), 
-                                             quantile(unlist(Shape),probs = seq(0, 1, 0.0025),
+                                             quantile(unlist(Shape),probs = seq(0, 1, quant),
                                                       type=7),
                                              rightmost.closed=TRUE)
                  )
@@ -28,7 +28,7 @@ list_of_plots <- tracks[n>50,
                                
                     ),
                     DP = list(ggplot(.SD[,
-                                         .(x = rep(1:120),
+                                         .(x = rep(1:24),
                                            y = unlist(DP_simplify)
                                          ),
                                          by = .(Track)],
@@ -40,27 +40,30 @@ list_of_plots <- tracks[n>50,
                     keyby = bin_shape
                     ]
   
-  ggsave(paste0(plot_folder,"_DP_scan.pdf"),
-         marrangeGrob(grobs = tt$p, nrow = 1, ncol = 1),
+  ggsave(paste0(plot_folder,"_DP_scan1.pdf"),
+         marrangeGrob(grobs = list_of_plots$p, nrow = 1, ncol = 1),
          width = 20, height = 20, units = "cm"
   )
 
-  ggsave(paste0(plot_folder,"DP_scan_DP.pdf"),
-         marrangeGrob(grobs = tt$DP, nrow = 1, ncol = 1),
+  ggsave(paste0(plot_folder,"DP_scan_DP1.pdf"),
+         marrangeGrob(grobs = list_of_plots$DP, nrow = 1, ncol = 1),
          width = 20, height = 20, units = "cm"
   )
 }
 
 #---------plot marginal histograms by starved/fresh-----------
-list_of_plots <- tracks[ ,
-                         .(mean(abs(unlist(Angles))),
-                           mean(unlist(Speed)),
-                           Group = File %like% "Starved"),
+plot_marginals <- function(){
+
+list_of_plots <- tracks_old[ sapply(t,`[[`,1)<5,
+                         .(sapply(DP_simplify, sum),
+                           mean(unlist(Speed))
+                           ),
                          
-                         by = .(Track, Starved = File %like% "Starved")
+                         by = .(Track, File = File)
                          ][,
                            .(plot = list(
-                             marginal_histogram(.SD, titulek = "e", Group = Starved) ))
+                             marginal_histogram(.SD, titulek = "e", Group = File) )
+                             )
                            ]
 
 
@@ -69,5 +72,5 @@ ggsave(paste0(plot_folder,"marginals1.pdf"),
        marrangeGrob(grobs = list_of_plots$plot, nrow = 1, ncol = 1),
        width = 20, height = 20, units = "cm"
 )
-
+}
 

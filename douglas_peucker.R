@@ -66,7 +66,7 @@ douglas_peucker_simplification <- function(x, y, epsilon_max) {
   length_simplified <- nrow(points_matrix)
   
   for (i in 1:(epsilon_max - 1)) {
-    simplified_track <- DouglasPeucker(points_matrix, i*0.1)
+    simplified_track <- DouglasPeucker(points_matrix, i*1)
     i <- i+1
     length_simplified <- nrow(simplified_track)
     if (length_simplified>2) sums[i]<-sum(distances(simplified_track[,1], simplified_track[,2]))
