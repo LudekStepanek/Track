@@ -51,6 +51,23 @@ list_of_plots <- tracks[n>50,
   )
 }
 
+#---------plot marginal histograms by starved/fresh-----------
+list_of_plots <- tracks[ ,
+                         .(mean(abs(unlist(Angles))),
+                           mean(unlist(Speed)),
+                           Group = File %like% "Starved"),
+                         
+                         by = .(Track, Starved = File %like% "Starved")
+                         ][,
+                           .(plot = list(
+                             marginal_histogram(.SD, titulek = "e", Group = Starved) ))
+                           ]
 
+
+#---------save plots to one file----------
+ggsave(paste0(plot_folder,"marginals1.pdf"),
+       marrangeGrob(grobs = list_of_plots$plot, nrow = 1, ncol = 1),
+       width = 20, height = 20, units = "cm"
+)
 
 
