@@ -1,20 +1,22 @@
 #----tracks in bins plot -----------
-DP_scan <- function(tracks, i_max){
+print_tracks_by_quantile <- function(tracks){
 
-for (i in seq(100,i_max,5)){
-  tt <- tracks[n>50,
+
+list_of_plots <- tracks[n>50,
                .(x=x,
                  y=y,
                  DP_simplify=DP_simplify,
                  Track = .I,
-                 Shape = lapply(DP_simplify,function(x){sum(x[1:i])})
+                 Shape = lapply(DP_simplify, function(x){sum(x)})
+                
                )
                ][,
                  `:=`(bin_shape=findInterval(unlist(Shape), 
                                              quantile(unlist(Shape),probs = seq(0, 1, 0.0025),
                                                       type=7),
                                              rightmost.closed=TRUE)
-                 )][,
+                 )
+                 ][,
                     .(p = list(ggplot(.SD[,
                                           .(x = unlist(x),
                                             y = unlist(y)
@@ -24,13 +26,31 @@ for (i in seq(100,i_max,5)){
                                  geom_path()+
                                  coord_fixed()
                                
-                    ) ),
+                    ),
+                    DP = list(ggplot(.SD[,
+                                         .(x = rep(1:120),
+                                           y = unlist(DP_simplify)
+                                         ),
+                                         by = .(Track)],
+                                     aes(x ,y ,group = Track) )+
+                                geom_path(alpha = 0.4)
+                              
+                    )
+                    ),
                     keyby = bin_shape
                     ]
   
-  ggsave(paste0(plot_folder,"DP_scan",i,".pdf"),
+  ggsave(paste0(plot_folder,"_DP_scan.pdf"),
          marrangeGrob(grobs = tt$p, nrow = 1, ncol = 1),
          width = 20, height = 20, units = "cm"
   )
+
+  ggsave(paste0(plot_folder,"DP_scan_DP.pdf"),
+         marrangeGrob(grobs = tt$DP, nrow = 1, ncol = 1),
+         width = 20, height = 20, units = "cm"
+  )
 }
-}
+
+
+
+
