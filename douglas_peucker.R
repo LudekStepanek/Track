@@ -65,12 +65,15 @@ douglas_peucker_simplification <- function(x, y, epsilon_max) {
   i <- 1
   length_simplified <- nrow(points_matrix)
   
-  while ((i < epsilon_max) & (length_simplified > 1)) {
-    simplified_track <- DouglasPeucker(points_matrix, i*0.2)
+  for (i in 1:(epsilon_max - 1)) {
+    simplified_track <- DouglasPeucker(points_matrix, i*0.1)
     i <- i+1
     length_simplified <- nrow(simplified_track)
-    if (length_simplified>1) sums[i]<-sum(distances(simplified_track[,1], simplified_track[,2]))
-    else sums[i:epsilon_max] <- sums[i-1]
+    if (length_simplified>2) sums[i]<-sum(distances(simplified_track[,1], simplified_track[,2]))
+    else {
+      sums[i:epsilon_max] <- sum(distances(simplified_track[,1], simplified_track[,2]))
+      break
+    }
   } 
   return(sums/sums[1])
 }
