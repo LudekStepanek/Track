@@ -52,17 +52,28 @@ list_of_plots <- tracks[n>50,
 }
 
 #---------plot marginal histograms by starved/fresh-----------
-plot_marginals <- function(){
-
-list_of_plots <- tracks_old[ sapply(t,`[[`,1)<5,
-                         .(sapply(DP_simplify, sum),
-                           mean(unlist(Speed))
+plot_marginals <- function(tracks){
+  
+list_of_plots <- tracks[sapply(t ,`[[`, 1) < 5,
+                         .(Shape = sapply(DP_simplify, sum),
+                           Speed = sapply(Speed, mean),
+                           n = .N
                            ),
-                         
-                         by = .(Track, File = File)
+                         by = .(Group = fifelse(Induced%ilike%"ind", "new", "old"))
                          ][,
-                           .(plot = list(
-                             marginal_histogram(.SD, titulek = "e", Group = File) )
+                           `:=`(
+                           Shape = Shape/max(Shape),
+                           n = min(n)
+                           )
+                         ][,
+                           .SD[sample(.N,n)],
+                           by = Group
+                         ][,
+                           .(plot = list( marginal_histogram(.SD[, .(Shape, Speed, Group)],
+                                                             .SD[, .(Y = .GRP, titulek = "ind", n=n),
+                                                                 by = Group] 
+                                                             )
+                                          )
                              )
                            ]
 
@@ -71,6 +82,6 @@ list_of_plots <- tracks_old[ sapply(t,`[[`,1)<5,
 ggsave(paste0(plot_folder,"marginals1.pdf"),
        marrangeGrob(grobs = list_of_plots$plot, nrow = 1, ncol = 1),
        width = 20, height = 20, units = "cm"
-)
+      )
 }
 

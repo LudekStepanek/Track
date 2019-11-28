@@ -2,7 +2,7 @@
 #----Expected is a data frame (data.table) with columns V1, V2, Group, and a string titulek
 
 
-marginal_histogram <- function(subset_data, titulek, Group) {
+marginal_histogram <- function(data, info) {
   
   theme_m_empty <- theme(
     axis.ticks = element_blank(),
@@ -11,7 +11,7 @@ marginal_histogram <- function(subset_data, titulek, Group) {
     axis.text.y = element_blank(),
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
-    plot.margin = margin(0, 0, 0, 0),
+    #plot.margin = margin(0, 0, 0, 0),
     legend.position = "none"
   )
 
@@ -48,42 +48,65 @@ marginal_histogram <- function(subset_data, titulek, Group) {
     legend.position = "none"
   )
 
-  hist_top <- ggplot(subset_data) +
-    geom_density(aes(V1, fill = Group, colour = Group), alpha = 0.2) +
+  hist_top <- ggplot(data) +
+    geom_density(aes_string(colnames(data)[1], 
+                            fill = colnames(data)[3],
+                            colour = colnames(data)[3]), 
+                 alpha = 0.2) +
     scale_x_continuous(position = "top") + #, limits = c(0,13))+
     theme_m_top
 
 
-  hist_right <- ggplot(subset_data) +
-    geom_density(aes(V2, fill = Group, colour = Group), alpha = 0.2) +
+  hist_right <- ggplot(data) +
+    geom_density(aes_string(colnames(data)[2],
+                            fill = colnames(data)[3],
+                            colour = colnames(data)[3]),
+                 alpha = 0.2) +
     scale_x_continuous(position = "top")+ #, limits = c(0,150))+
     coord_flip() +
     theme_m_right
 
-  scatter <- ggplot(subset_data) +
-    geom_point(aes(V1, V2, colour = Group), alpha = 0.2) +
+  scatter <- ggplot(data) +
+    geom_point(aes_string(colnames(data)[1], 
+                          colnames(data)[2], 
+                          fill = colnames(data)[3],
+                          colour = colnames(data)[3]),
+               alpha = 0.2) +
     # scale_x_continuous(position = "top") +
     # scale_y_continuous(position = "right") +
    # xlim(c(0, 13)) +
    # ylim(c(0, 150)) +
     theme_m_main
 
-  empty <- ggplot(subset_data) +
-    # geom_point(aes(x = 0.1, y = 4 ),shape = 22, colour = "blue", fill = "lightblue", size = 5, alpha = 0.5)+
-    # geom_point(aes(x = 0.1, y = 3),shape = 22, colour = "red",fill = "indianred1", size = 5, alpha = 0.5)+
-    # geom_point(aes(x = 0.1, y = 2), shape = 0, colour = "black", size = 5, alpha = 0.5)+
-    #  annotate("text", x = 0.4, y = 4, label = "NON", hjust = 0)+
+  empty <- ggplot(info) +
+     geom_point(aes(x = 0, 
+                    y = info$Y,
+                    colour = info$Group,
+                    fill = info$Group),
+                shape = 22,
+                size = 5,
+                alpha = 0.5) +
+    annotate("text", x = 0.5, y =info$Y, label = info$Group, hjust = 0)+
+    geom_point(aes(x = 5, y = max(info$Y)+1),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
+    annotate("text", x = 0.5, y = min(info$Y)-1, label = paste("n/Group = ",info$n),  hjust = 0)+
+    geom_point(aes(x = 5, y = min(info$Y)-2),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
+    
+    
     # 
     #  annotate("text", x = 0.4, y = 3, label = "IND72h",  hjust = 0)+
     #  annotate("text", x = 0.4, y = 2, label = "All NON together", hjust = 0)+
-    # labs(title = titulek) +
+     labs(title = info$titulek) +
     # ylim(c(0,5))+
     # xlim(c(0,5))+
     theme_m_empty
 
   list_of_marginals <- list(hist_top, empty, scatter, hist_right)
 
-  g1 <- grid.arrange(grobs = list_of_marginals, ncol = 2, nrow = 2, widths = c(4, 1.5), heights = c(1.5, 4)) # need to use 'grobs =' to have a list as an argument
+  g1 <- grid.arrange(grobs = list_of_marginals,
+                     ncol = 2, 
+                     nrow = 2, 
+                     widths = c(4, 1.5),
+                     heights = c(1.5, 4)) # need to use 'grobs =' to have a list as an argument
 }
 
 
