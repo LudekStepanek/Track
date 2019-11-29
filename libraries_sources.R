@@ -13,4 +13,5 @@ source("douglas_peucker.R")
 source("marginal_histogram.R")
 source("add_attributes.R")
 source("visualize.R")
+source("rename_proteins.R")
 
