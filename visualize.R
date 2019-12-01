@@ -56,10 +56,10 @@ plot_marginals <- function(tracks){
   
 list_of_plots <- tracks[sapply(t ,`[[`, 1) < 5,
                          .(Shape = sapply(DP_simplify, sum),
-                           Speed = sapply(Speed, mean),
+                           Speed = sapply(Speed_res, mean),
                            n = .N
                            ),
-                         by = .(Group = fifelse(Induced%ilike%"ind", "new", "old"))
+                         by = .(Group = fifelse(File%ilike%"load", "new", "old"))
                          ][,
                            `:=`(
                            Shape = Shape/max(Shape),
@@ -83,5 +83,22 @@ ggsave(paste0(plot_folder,"marginals1.pdf"),
        marrangeGrob(grobs = list_of_plots$plot, nrow = 1, ncol = 1),
        width = 20, height = 20, units = "cm"
       )
+}
+
+#-------plot track + point  + resampled points
+
+
+plot_track <- function(data, track){
+  data[track,
+        .(plot = list(ggplot(data = .SD[, .(x = unlist(x), y = unlist(y), by = Track)],
+                             aes(x,y, group = Track))+
+                        geom_path()+
+                        geom_point()+
+                        geom_point(data = .SD[, .(x = unlist(x_res), y = unlist(y_res), by = Track)],
+                                   aes(x,y, group = Track), colour = "red")
+        )
+        )
+       ]
+  
 }
 
