@@ -5,6 +5,7 @@ plot_folder <- ("C:\\Users\\Ludek\\Documents\\R\\plots\\")
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_starved\\"
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\ts_sample\\"
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_old\\"
+data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\sample04\\"
 
 
 data_folder <- "K:\\t_sample\\"
@@ -15,11 +16,9 @@ setwd("C:\\Users\\Ludek\\Documents\\R\\Track\\")
 
 source("libraries_sources.R")
 
-pixel_size <- 0.65
-
 tracks <- import_tracks(data_folder, Load = F)
 
-add_1(tracks)
+add_speed(tracks,2)
 
 add_DP_simplify(tracks, 25)
 

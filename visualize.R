@@ -28,12 +28,13 @@ list_of_plots <- tracks[n>50,
                                
                     ),
                     DP = list(ggplot(.SD[,
-                                         .(x = rep(1:24),
+                                         .(x = rep(1:25),
                                            y = unlist(DP_simplify)
                                          ),
                                          by = .(Track)],
-                                     aes(x ,y ,group = Track) )+
-                                geom_path(alpha = 0.4)
+                                     aes(x ,y ,group = Track) ) +
+                                geom_path(alpha = 0.4) +
+                                ylim(c(0,1))
                               
                     )
                     ),
