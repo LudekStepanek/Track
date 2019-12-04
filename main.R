@@ -19,9 +19,9 @@ pixel_size <- 0.65
 
 tracks <- import_tracks(data_folder, Load = F)
 
-add_1(tracks)
+spt <- add_speed(tracks)
 
-add_DP_simplify(tracks, 25)
+dps <- add_DP_simplify(tracks, 25)
 
 
 
@@ -42,6 +42,10 @@ tracks <- rbind(tracks_old, tracks_starved)
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_old\\"
 tracks_old <- readRDS(paste0(data_folder,"data_add2.sav"))
 setDT(tracks_old)
+
+
+
+
 
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_starved\\"
 tracks_starved <- readRDS(paste0(data_folder,"data_add2.sav"))

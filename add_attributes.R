@@ -1,25 +1,30 @@
-add_1 <- function(DT){
+add_speed <- function(DT){
   started.at <- proc.time()
-  DT[,
-     `:=`(Dists = mapply(distances, x, y),
-          Tdiff = lapply(t, diff))
-     ][,
-       `:=`( Speed = mapply(`/`, Dists, Tdiff),
-            Angles = mapply(angles, x, y))
+  DT_speed <- DT[,
+     {
+     Dists =distances(x, y);
+     Tdiff = diff(t);
+     list(Speed = Dists/Tdiff)
+     
+     },
+       by = Track
        ]
-  saveRDS(DT, paste0(data_folder, "data_add1.sav"))
+  saveRDS(DT, paste0(data_folder, "data_speed.sav"))
   cat("Data 1 processed and saved", timetaken(started.at), "\n")
-  return(DT)
+  return(DT_speed)
 }
+
+
 
 add_DP_simplify <- function(DT, epsilon_max = 100){
   started.at <- proc.time()
-  DT[,
-     `:=`(DP_simplify = mapply(douglas_peucker_simplification, x, y, epsilon_max, SIMPLIFY = FALSE))
+  DT_dps <- DT[,
+     .(DP_simplify = douglas_peucker_simplification( x, y, epsilon_max)),
+     by = Track
      ]
-  saveRDS(DT, paste0(data_folder, "data_add2.sav"))
+  saveRDS(DT, paste0(data_folder, "data_dps.sav"))
   cat("Data 2 processed and saved", timetaken(started.at), "\n")
-  return(DT)
+  return(DT_dps)
 }
 
 # Interpolate x and y separately. This works by treating x (or y) as a
