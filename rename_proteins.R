@@ -9,4 +9,17 @@ tracks[, `:=`(Protein = protein_IDs[V3 == .BY, V1],
 
 }
 
+split_name <- function(tracks) {
+  tracks[,
+         `:=`(
+           Line = unlist(strsplit(File, "_", fixed = TRUE))[4],
+           Induced = unlist(strsplit(File, "_", fixed = TRUE))[5],
+           Repetition = unlist(strsplit(File, "_", fixed = TRUE))[6]
+         ),
+         by = File
+         ]
+  
+}
+
+
 
