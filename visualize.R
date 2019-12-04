@@ -55,7 +55,7 @@ list_of_plots <- tracks[n>50,
 #---------plot marginal histograms by Line and Induced/NON-----------
 plot_marginals <- function(tracks){
   
-list_of_plots <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60,
+plot_data <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60,
                          .(Shape = sapply(DP_simplify, sum),
                            Speed = sapply(Speed, mean),
                            n = .N
@@ -66,9 +66,18 @@ list_of_plots <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60,
                            Shape = Shape/max(Shape),
                           Max_Speed = max(Speed)
                            )
-                         ][,
-                           .(plot = list( marginal_histogram(.SD[, .(Shape, Speed, Induced)],
-                                                             .SD[, .(Y = .GRP, titulek = Line, n=n, Max_Speed = Max_Speed),
+                         ]
+
+list_of_plots <- plot_data[,
+                           .(plot = list( marginal_histogram(data = .SD[, .(Shape, Speed, Induced)],
+                                                             
+                                                             unbiased_control = plot_data[!Line %in% .BY[[1]] & Induced == "NON",
+                                                                                       .(Shape, Speed)],
+                                                             
+                                                             info = .SD[, .(Y = .GRP,
+                                                                     titulek = Line, 
+                                                                     n = n,
+                                                                     Max_Speed = Max_Speed),
                                                                  by = .(Group = Induced)] 
                                                              )
                                           )

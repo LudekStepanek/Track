@@ -2,7 +2,7 @@
 #----Expected is a data frame (data.table) with columns V1, V2, Group, and a string titulek
 
 
-marginal_histogram <- function(data, info) {
+marginal_histogram <- function(data, unbiased_control, info) {
   
   theme_m_empty <- theme(
     axis.ticks = element_blank(),
@@ -53,6 +53,7 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]), 
                  alpha = 0.2) +
+    geom_density(data = unbiased_control, aes(Shape)) +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
     
     theme_m_top
@@ -63,6 +64,7 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]),
                  alpha = 0.2) +
+    geom_density(data = unbiased_control, aes(Speed)) +
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
     coord_flip() +
     theme_m_right
