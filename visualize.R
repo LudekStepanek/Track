@@ -52,30 +52,28 @@ list_of_plots <- tracks[n>50,
   )
 }
 
-#---------plot marginal histograms by starved/fresh-----------
+#---------plot marginal histograms by Line and Induced/NON-----------
 plot_marginals <- function(tracks){
   
-list_of_plots <- tracks[sapply(t ,`[[`, 1) < 5,
+list_of_plots <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60,
                          .(Shape = sapply(DP_simplify, sum),
-                           Speed = sapply(Speed_res, mean),
+                           Speed = sapply(Speed, mean),
                            n = .N
                            ),
-                         by = .(Group = fifelse(File%ilike%"load", "new", "old"))
+                         by = .(Line, Induced)
                          ][,
                            `:=`(
                            Shape = Shape/max(Shape),
-                           n = min(n)
+                          Max_Speed = max(Speed)
                            )
                          ][,
-                           .SD[sample(.N,n)],
-                           by = Group
-                         ][,
-                           .(plot = list( marginal_histogram(.SD[, .(Shape, Speed, Group)],
-                                                             .SD[, .(Y = .GRP, titulek = "ind", n=n),
-                                                                 by = Group] 
+                           .(plot = list( marginal_histogram(.SD[, .(Shape, Speed, Induced)],
+                                                             .SD[, .(Y = .GRP, titulek = Line, n=n, Max_Speed = Max_Speed),
+                                                                 by = .(Group = Induced)] 
                                                              )
                                           )
-                             )
+                             ),
+                           by = Line
                            ]
 
 
