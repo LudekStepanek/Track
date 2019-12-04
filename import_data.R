@@ -77,9 +77,9 @@ import_tracks <- function(path, Load = FALSE) {
   
   started.at <- proc.time()
   
-  tracks <-  data_imported[, .(t = t/1000,
-                               x = x * pixel_size,
-                               y = y * pixel_size, 
+  tracks <-  data_imported[, .(t = t / 1000,
+                               x = x,
+                               y = y, 
                                n = .N, 
                                File = data.table::first(File)
                                
