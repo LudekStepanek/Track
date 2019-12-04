@@ -1,15 +1,23 @@
-add_speed <- function(DT){
+add_speed <- function(tracks, time_step){
   started.at <- proc.time()
-  DT_speed <- DT[,
+  DT_speed <- tracks[,
+                 .(
+                   x_res = stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y,
+                   
+                   y_res = stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y,
+                   
+                   t_res = seq(t[1], t[length(t)],time_step)
+                 ),
+                 by = Track
+                 ][,
      {
-     Dists =distances(x, y);
-     Tdiff = diff(t);
+     Dists = distances(x_res, y_res);
+     Tdiff = diff(t_res);
      list(Speed = Dists/Tdiff)
-     
      },
        by = Track
        ]
-  saveRDS(DT, paste0(data_folder, "data_speed.sav"))
+  saveRDS(tracks, paste0(data_folder, "data_speed.sav"))
   cat("Data 1 processed and saved", timetaken(started.at), "\n")
   return(DT_speed)
 }
@@ -31,38 +39,16 @@ add_DP_simplify <- function(DT, epsilon_max = 100){
 # function of time (so x axis is time, y axis is trajectory x or y), then
 # interpolating to required times. approx interpolates y for given values of x
 
-resample_time <- function(data, time_step){
-  data[,
-                 `:=`(
-                   x_res = mapply( function(x,t){
-                   stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y},
-                   x,t ),
-                   y_res = mapply( function(x,t){
-                     stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y},
-                     y,t ),
-                   t_res = lapply(t, function(t) seq(t[1], t[length(t)],time_step))
-                 )
-                 ][,
-                   `:=`(Dists_res = mapply(distances, x_res, y_res),
-                     Tdiff_res = lapply(t_res, diff))
-                   ][,
-                     Speed_res:= mapply(`/`, Dists_res, Tdiff_res)
+resample_time <- function(tracks, time_step){
+  resampled_tracks <- tracks[,
+                 .(
+                   x_res = stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y,
                   
-                 ]
-  
-}
-
-resample_time_ <- function(data, time_step){
- data[,
-                 `:=`(
-                   x = mapply( function(x,t){
-                     stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y},
-                     x,t ),
-                   y = mapply( function(x,t){
-                     stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y},
-                     y,t ),
-                   t = lapply(t, function(t) seq(t[1], t[length(t)],time_step))
-                 )
+                   y_res = stats::approx(t, x, seq(t[1], t[length(t)],time_step))$y,
+                   
+                   t_res = seq(t[1], t[length(t)],time_step)
+                 ),
+                 by = .(Track, File)
                  ]
   
 }
