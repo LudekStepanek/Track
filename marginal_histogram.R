@@ -53,7 +53,8 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]), 
                  alpha = 0.2) +
-    scale_x_continuous(position = "top") + #, limits = c(0,13))+
+    scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
+    
     theme_m_top
 
 
@@ -62,7 +63,7 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]),
                  alpha = 0.2) +
-    scale_x_continuous(position = "top")+ #, limits = c(0,150))+
+    scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
     coord_flip() +
     theme_m_right
 
@@ -74,8 +75,8 @@ marginal_histogram <- function(data, info) {
                alpha = 0.2) +
     # scale_x_continuous(position = "top") +
     # scale_y_continuous(position = "right") +
-   # xlim(c(0, 13)) +
-   # ylim(c(0, 150)) +
+    xlim(c(0, 1)) +
+    ylim(c(0, data.table::first(info$Max_Speed) )) +
     theme_m_main
 
   empty <- ggplot(info) +
@@ -86,9 +87,9 @@ marginal_histogram <- function(data, info) {
                 shape = 22,
                 size = 5,
                 alpha = 0.5) +
-    annotate("text", x = 0.5, y =info$Y, label = info$Group, hjust = 0)+
+    annotate("text", x = 0.5, y =info$Y, label = paste0(info$Group," n = ", info$n), hjust = 0)+
     geom_point(aes(x = 5, y = max(info$Y)+1),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
-    annotate("text", x = 0.5, y = min(info$Y)-1, label = paste("n/Group = ",info$n),  hjust = 0)+
+    #annotate("text", x = 0.5, y = min(info$Y)-1, label = paste("n/Group = ",info$n),  hjust = 0)+
     geom_point(aes(x = 5, y = min(info$Y)-2),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
     
     
