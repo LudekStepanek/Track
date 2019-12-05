@@ -2,7 +2,7 @@
 #----Expected is a data frame (data.table) with columns V1, V2, Group, and a string titulek
 
 
-marginal_histogram <- function(data, info) {
+marginal_histogram <- function(data, unbiased_control, info) {
   
   theme_m_empty <- theme(
     axis.ticks = element_blank(),
@@ -26,10 +26,10 @@ marginal_histogram <- function(data, info) {
   )
 
   theme_m_right <- theme(
-    axis.ticks.x  = element_blank(),
-    axis.text.x = element_blank(),
+   axis.ticks.x  = element_blank(),
+   axis.text.x = element_blank(),
     #axis.text.y = element_blank(),
-    axis.title.x = element_blank(),
+   axis.title.x = element_blank(),
     #axis.title.y = element_blank(),
     plot.margin = margin(0, 0, 0, 0),
     legend.position = "none"
@@ -53,8 +53,9 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]), 
                  alpha = 0.2) +
+    geom_density(data = unbiased_control, aes(Shape)) +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
-    
+    scale_y_continuous(limits = c(0,5))+
     theme_m_top
 
 
@@ -63,7 +64,9 @@ marginal_histogram <- function(data, info) {
                             fill = colnames(data)[3],
                             colour = colnames(data)[3]),
                  alpha = 0.2) +
+    geom_density(data = unbiased_control, aes(Speed)) +
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
+    scale_y_continuous(limits = c(0,0.5))+
     coord_flip() +
     theme_m_right
 
