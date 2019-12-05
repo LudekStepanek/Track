@@ -72,7 +72,8 @@ marginal_histogram <- function(data, info) {
                           colnames(data)[2], 
                           fill = colnames(data)[3],
                           colour = colnames(data)[3]),
-               alpha = 0.2) +
+               alpha = 0.4,
+               size = 0.6) +
     # scale_x_continuous(position = "top") +
     # scale_y_continuous(position = "right") +
     xlim(c(0, 1)) +
