@@ -5,7 +5,8 @@ library(XML)
 library(xml2)
 library(tidyverse)
 library(cluster)
-
+library(Rcpp)
+library(RcppArmadillo)
 
 source("import_data.R")
 source("geometry_functions.R")
@@ -14,4 +15,6 @@ source("marginal_histogram.R")
 source("add_attributes.R")
 source("visualize.R")
 source("rename_proteins.R")
+sourceCpp("DPRCPP.cpp")
+
 
