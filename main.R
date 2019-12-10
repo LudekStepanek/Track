@@ -8,7 +8,7 @@ data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_old\\"
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\sample04\\"
 
 
-data_folder <- "K:\\t_sample\\"
+data_folder <- "K:\\19-12-02\\"
 data_folder <- "K:\\TrackingExperimentProcessed\\"
 data_folder <- "K:\\project_starved\\"
 
@@ -17,6 +17,8 @@ setwd("C:\\Users\\Ludek\\Documents\\R\\Track\\")
 source("libraries_sources.R")
 
 tracks <- import_tracks(data_folder, Load = F)
+
+split_name(tracks)
 
 add_speed(tracks,2)
 
