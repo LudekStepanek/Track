@@ -53,32 +53,32 @@ list_of_plots <- tracks[n>50,
 }
 
 #---------plot marginal histograms by Line and Induced/NON-----------
-plot_marginals <- function(tracks){
+plot_marginals <- function(plot_data, output_file = "marginals.pdf"){
   
-plot_data <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60,
-                         .(Shape = sapply(DP_simplify, sum),
-                           Speed = sapply(Speed, mean),
-                           n = .N
-                           ),
-                         by = .(Line, Induced)
-                         ][,
-                           `:=`(
-                           Shape = Shape/max(Shape),
-                          Max_Speed = max(Speed)
-                           )
-                         ]
+# plot_data <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60 & Experiment == "2019_12_05",
+#                          .(Shape = sapply(DP_simplify, sum),
+#                            Speed = sapply(Speed, mean),
+#                            n = .N
+#                            ),
+#                          by = .(Line, Condition)
+#                          ][,
+#                            `:=`(
+#                            Shape = Shape/max(Shape),
+#                           Max_Speed = max(Speed)
+#                            )
+#                          ]
 
 list_of_plots <- plot_data[,
-                           .(plot = list( marginal_histogram(data = .SD[, .(Shape, Speed, Induced)],
+                           .(plot = list( marginal_histogram(data = .SD[, .(Shape, Speed, Condition)],
                                                              
-                                                             unbiased_control = plot_data[!Line %in% .BY[[1]] & Induced == "NON",
+                                                             unbiased_control = plot_data[!Line %in% .BY[[1]] & Control == TRUE,
                                                                                        .(Shape, Speed)],
                                                              
                                                              info = .SD[, .(Y = .GRP,
                                                                      titulek = Line, 
                                                                      n = n,
                                                                      Max_Speed = Max_Speed),
-                                                                 by = .(Group = Induced)] 
+                                                                 by = .(Group = Condition)] 
                                                              )
                                           )
                              ),
@@ -87,7 +87,7 @@ list_of_plots <- plot_data[,
 
 
 #---------save plots to one file----------
-ggsave(paste0(plot_folder,"marginals1.pdf"),
+ggsave(paste0(plot_folder,output_file),
        marrangeGrob(grobs = list_of_plots$plot, nrow = 1, ncol = 1),
        width = 20, height = 20, units = "cm"
       )

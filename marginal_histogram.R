@@ -55,7 +55,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
                  alpha = 0.2) +
     geom_density(data = unbiased_control, aes(Shape)) +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
-    scale_y_continuous(limits = c(0,4.5))+
+    scale_y_continuous(limits = c(0,5))+
     theme_m_top
 
 
@@ -66,17 +66,17 @@ marginal_histogram <- function(data, unbiased_control, info) {
                  alpha = 0.2) +
     geom_density(data = unbiased_control, aes(Speed)) +
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
-    scale_y_continuous(limits = c(0,0.4))+
+    scale_y_continuous(limits = c(0,0.5))+
     coord_flip() +
     theme_m_right
 
-  scatter <- ggplot(data) +
-    geom_point(aes_string(colnames(data)[1], 
+  
+  scatter <- ggplot(data, aes_string(colnames(data)[1], 
                           colnames(data)[2], 
                           fill = colnames(data)[3],
-                          colour = colnames(data)[3]),
-               alpha = 0.4,
-               size = 0.6) +
+                          colour = colnames(data)[3])) +
+    #geom_point(alpha = 0.4, size = 0.6) +
+    stat_density_2d()+
     # scale_x_continuous(position = "top") +
     # scale_y_continuous(position = "right") +
     xlim(c(0, 1)) +
