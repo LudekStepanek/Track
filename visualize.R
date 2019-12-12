@@ -55,18 +55,6 @@ list_of_plots <- tracks[n>50,
 #---------plot marginal histograms by Line and Induced/NON-----------
 plot_marginals <- function(plot_data, output_file = "marginals.pdf"){
   
-# plot_data <- tracks[(sapply(t ,`[[`, 1) < 10) & n > 60 & Experiment == "2019_12_05",
-#                          .(Shape = sapply(DP_simplify, sum),
-#                            Speed = sapply(Speed, mean),
-#                            n = .N
-#                            ),
-#                          by = .(Line, Condition)
-#                          ][,
-#                            `:=`(
-#                            Shape = Shape/max(Shape),
-#                           Max_Speed = max(Speed)
-#                            )
-#                          ]
 
 list_of_plots <- plot_data[,
                            .(plot = list( marginal_histogram(data = .SD[, .(Shape, Speed, Condition)],

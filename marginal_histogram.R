@@ -69,6 +69,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     geom_line(stat="density",data = unbiased_control, aes(Shape), size = 1.5, colour = "grey50") +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
     scale_y_continuous(limits = c(0,5))+
+    scale_colour_brewer(palette = "Set1")+
     theme_m_top
 
 
@@ -82,6 +83,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
     scale_y_continuous(limits = c(0,0.5))+
     coord_flip() +
+    scale_colour_brewer(palette = "Set1")+
     theme_m_right
 
   
@@ -95,6 +97,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     # scale_y_continuous(position = "right") +
     xlim(c(0, 1)) +
     ylim(c(0, data.table::first(info$Max_Speed) )) +
+    scale_colour_brewer(palette = "Set1")+
     theme_m_main
 
   empty <- ggplot(info) +
@@ -104,7 +107,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
                     fill = info$Group),
                 shape = 22,
                 size = 5,
-                alpha = 0.5) +
+                alpha = 1) +
     annotate("text", x = 0.5, y =info$Y, label = paste0(info$Group," n = ", info$n), hjust = 0)+
     geom_point(aes(x = 5, y = max(info$Y)+1),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
     #annotate("text", x = 0.5, y = min(info$Y)-1, label = paste("n/Group = ",info$n),  hjust = 0)+
@@ -117,6 +120,8 @@ marginal_histogram <- function(data, unbiased_control, info) {
      labs(title = info$titulek) +
     # ylim(c(0,5))+
     # xlim(c(0,5))+
+    scale_colour_brewer(palette = "Set1")+
+    scale_fill_brewer(palette = "Set1")+
     theme_m_empty
 
   list_of_marginals <- list(hist_top, empty, scatter, hist_right)

@@ -7,6 +7,7 @@ library(tidyverse)
 library(cluster)
 library(Rcpp)
 library(RcppArmadillo)
+library(RColorBrewer)
 
 source("import_data.R")
 source("geometry_functions.R")
