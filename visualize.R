@@ -76,8 +76,9 @@ list_of_plots <- plot_data[,
                                                              
                                                              info = .SD[, .(Y = .GRP,
                                                                      titulek = Line, 
-                                                                     n = n,
-                                                                     Max_Speed = Max_Speed),
+                                                                     n = first(n),
+                                                                     Max_Speed = first(Max_Speed)
+                                                                     ),
                                                                  by = .(Group = Condition)] 
                                                              )
                                           )

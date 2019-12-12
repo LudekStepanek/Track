@@ -48,6 +48,10 @@ tracks[,
          )
        ]
 
+#----------read processed data ------------
+tracks <- readRDS("C:\\Users\\Ludek\\Documents\\R\\data\\data_DP.sav")
+setDT(tracks)
+
 
 #-------read processed bind to one frame----------
 data_folder <- "C:\\Users\\Ludek\\Documents\\R\\data\\tracking_old\\"

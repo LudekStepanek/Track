@@ -22,7 +22,11 @@ marginal_histogram <- function(data, unbiased_control, info) {
     #axis.title.x = element_blank(),
     axis.title.y = element_blank(),
     plot.margin = margin(0, 0, 0, 0),
-    legend.position = "none"
+    legend.position = "none",
+    panel.background =   element_rect(fill = NA, colour = NA),
+    panel.border =       element_blank(),
+    panel.grid =         element_line(colour = "grey70", size = 0.01),
+    panel.grid.minor =    element_blank()
   )
 
   theme_m_right <- theme(
@@ -32,7 +36,11 @@ marginal_histogram <- function(data, unbiased_control, info) {
    axis.title.x = element_blank(),
     #axis.title.y = element_blank(),
     plot.margin = margin(0, 0, 0, 0),
-    legend.position = "none"
+    legend.position = "none",
+   panel.background =   element_rect(fill = NA, colour = NA),
+   panel.border =       element_blank(),
+   panel.grid =         element_line(colour = "grey70", size = 0.01),
+   panel.grid.minor =    element_blank()
   )
 
   theme_m_main <- theme(
@@ -45,26 +53,32 @@ marginal_histogram <- function(data, unbiased_control, info) {
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
     plot.margin = margin(0, 0, 0, 0),
-    legend.position = "none"
+    legend.position = "none",
+    panel.background =   element_rect(fill = NA, colour = NA),
+    panel.border =       element_blank(),
+    panel.grid =         element_line(colour = "grey70", size = 0.01),
+    panel.grid.minor =    element_blank(),
   )
 
   hist_top <- ggplot(data) +
-    geom_density(aes_string(colnames(data)[1], 
-                            fill = colnames(data)[3],
+    geom_line(stat="density", aes_string(colnames(data)[1], 
+                            #fill = colnames(data)[3],
                             colour = colnames(data)[3]), 
-                 alpha = 0.2) +
-    geom_density(data = unbiased_control, aes(Shape)) +
+                 alpha = 1, 
+                 size = 1.5,) +
+    geom_line(stat="density",data = unbiased_control, aes(Shape), size = 1.5, colour = "grey50") +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
     scale_y_continuous(limits = c(0,5))+
     theme_m_top
 
 
   hist_right <- ggplot(data) +
-    geom_density(aes_string(colnames(data)[2],
-                            fill = colnames(data)[3],
+    geom_line(stat="density", aes_string(colnames(data)[2],
+                            #fill = colnames(data)[3],
                             colour = colnames(data)[3]),
-                 alpha = 0.2) +
-    geom_density(data = unbiased_control, aes(Speed)) +
+                 alpha = 1, 
+                 size = 1.5) +
+    geom_line(stat="density",data = unbiased_control, aes(Speed), size = 1.5, colour = "grey50") +
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
     scale_y_continuous(limits = c(0,0.5))+
     coord_flip() +
@@ -75,8 +89,8 @@ marginal_histogram <- function(data, unbiased_control, info) {
                           colnames(data)[2], 
                           fill = colnames(data)[3],
                           colour = colnames(data)[3])) +
-    #geom_point(alpha = 0.4, size = 0.6) +
-    stat_density_2d()+
+    geom_point(alpha = 0.6, size = 0.9, shape = 20) +
+    #stat_density_2d()+
     # scale_x_continuous(position = "top") +
     # scale_y_continuous(position = "right") +
     xlim(c(0, 1)) +
