@@ -1,5 +1,5 @@
 #----------display scatter plot + marginal histograms for subset of data provided by data.table----------
-#----Expected is a data frame (data.table) with columns V1, V2, Group, and a string titulek
+#----
 
 
 marginal_histogram <- function(data, unbiased_control, info) {
@@ -11,32 +11,27 @@ marginal_histogram <- function(data, unbiased_control, info) {
     axis.text.y = element_blank(),
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
-    #plot.margin = margin(0, 0, 0, 0),
     legend.position = "none"
   )
 
   theme_m_top <- theme(
     axis.ticks.y = element_blank(),
-    #axis.text.x = element_blank(),
     axis.text.y = element_blank(),
-    #axis.title.x = element_blank(),
     axis.title.y = element_blank(),
     plot.margin = margin(0, 0, 0, 0),
     legend.position = "none",
     panel.background =   element_rect(fill = NA, colour = NA),
     panel.border =       element_blank(),
-    panel.grid =         element_line(colour = "grey70", size = 0.01), #!grey
+    panel.grid =         element_line(colour = "grey70", size = 0.01),
     panel.grid.minor =    element_blank()
   )
 
   theme_m_right <- theme(
    axis.ticks.x  = element_blank(),
    axis.text.x = element_blank(),
-    #axis.text.y = element_blank(),
    axis.title.x = element_blank(),
-    #axis.title.y = element_blank(),
-    plot.margin = margin(0, 0, 0, 0),
-    legend.position = "none",
+   plot.margin = margin(0, 0, 0, 0),
+   legend.position = "none",
    panel.background =   element_rect(fill = NA, colour = NA),
    panel.border =       element_blank(),
    panel.grid =         element_line(colour = "grey70", size = 0.01),
@@ -45,9 +40,6 @@ marginal_histogram <- function(data, unbiased_control, info) {
 
   theme_m_main <- theme(
     axis.ticks = element_blank(),
-    # axis.ticks.length= unit(  -5, "pt"),
-    # axis.text.x =        element_text(margin = margin(t = 0.8 *  2), vjust = 1),
-    # axis.text.x.top =    element_text(margin = margin(b = 0.8 *  2), vjust = 0),
     axis.text.x = element_blank(),
     axis.text.y = element_blank(),
     axis.title.x = element_blank(),
@@ -56,7 +48,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     legend.position = "none",
     panel.background =   element_rect(fill = NA, colour = NA),
     panel.border =       element_blank(),
-    panel.grid =         element_line(colour = "grey99", size = 0.01), #grey!
+    panel.grid =         element_line(colour = "grey70", size = 0.01),
     panel.grid.minor =    element_blank(),
   )
 
@@ -92,9 +84,6 @@ marginal_histogram <- function(data, unbiased_control, info) {
                           fill = colnames(data)[3],
                           colour = colnames(data)[3])) +
     geom_point(alpha = 0.6, size = 0.9, shape = 20) +
-    #stat_density_2d()+
-    # scale_x_continuous(position = "top") +
-    # scale_y_continuous(position = "right") +
     xlim(c(0, 1)) +
     ylim(c(0, data.table::first(info$Max_Speed) )) +
     scale_colour_brewer(palette = "Set1")+
@@ -114,14 +103,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     geom_point(aes(x = 5, y = max(info$Y)+1),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
     #annotate("text", x = 0.5, y = min(info$Y)-1, label = paste("n/Group = ",info$n),  hjust = 0)+
     geom_point(aes(x = 5, y = min(info$Y)-2),shape = 22, colour = "white",fill = "white", size = 5, alpha = 0)+
-    
-    
-    # 
-    #  annotate("text", x = 0.4, y = 3, label = "IND72h",  hjust = 0)+
-    #  annotate("text", x = 0.4, y = 2, label = "All NON together", hjust = 0)+
-     labs(title = info$titulek) +
-    # ylim(c(0,5))+
-    # xlim(c(0,5))+
+    labs(title = info$titulek) +
     scale_colour_brewer(palette = "Set1")+
     scale_fill_brewer(palette = "Set1")+
     theme_m_empty
