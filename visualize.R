@@ -116,7 +116,7 @@ plot_track <- function(data, track){
 print_big_map <- function(tracks, quant = 0.1){
   
   
-  list_of_plots <- tracks[n>60,
+  list_of_plots <- tracks[n>60&Experiment%in% c("2019_11_15","2019_12_05","2019_11_12"),
                           .(
                             x=mapply(function(a,b) (a-a[1])+b*50000, x, Shape),
                             y=mapply(function(a,b) (a-a[1])+b*50000, y, Mean_Speed/max(Mean_Speed)),
@@ -136,7 +136,9 @@ print_big_map <- function(tracks, quant = 0.1){
                                          geom_path()+
                                          labs(title = Line)+
                                          coord_fixed()+
-                                         theme_void()
+                                         ylim(c(0,50000))+
+                                         xlim(c(0,50000))+
+                                         theme_classic(base_size = 200)
                             )
                             
                            
