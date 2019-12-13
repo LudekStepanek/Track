@@ -25,7 +25,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     legend.position = "none",
     panel.background =   element_rect(fill = NA, colour = NA),
     panel.border =       element_blank(),
-    panel.grid =         element_line(colour = "grey70", size = 0.01),
+    panel.grid =         element_line(colour = "grey70", size = 0.01), #!grey
     panel.grid.minor =    element_blank()
   )
 
@@ -56,7 +56,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
     legend.position = "none",
     panel.background =   element_rect(fill = NA, colour = NA),
     panel.border =       element_blank(),
-    panel.grid =         element_line(colour = "grey70", size = 0.01),
+    panel.grid =         element_line(colour = "grey99", size = 0.01), #grey!
     panel.grid.minor =    element_blank(),
   )
 
@@ -98,6 +98,8 @@ marginal_histogram <- function(data, unbiased_control, info) {
     xlim(c(0, 1)) +
     ylim(c(0, data.table::first(info$Max_Speed) )) +
     scale_colour_brewer(palette = "Set1")+
+    geom_vline(xintercept = quantile(tracks$Shape,probs = seq(0, 1, 1/10),type=7))+
+    geom_hline(yintercept = quantile(tracks$Mean_Speed,probs = seq(0, 1, 1/6),type=7))+
     theme_m_main
 
   empty <- ggplot(info) +
