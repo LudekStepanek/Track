@@ -60,7 +60,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
                  size = 1.0,) +
     geom_line(stat="density",data = unbiased_control, aes(Shape), size = 1.0, colour = "grey50") +
     scale_x_continuous(position = "top", limits = c(0,1)) + #, limits = c(0,13))+
-    scale_y_continuous(limits = c(0,data.table::first(info$Shape_density_max)))+
+    scale_y_continuous(limits = c(0,data.table::first(info$Shape_density_max)*1.05))+
     scale_colour_brewer(palette = "Set1")+
     theme_m_top
 
@@ -73,7 +73,7 @@ marginal_histogram <- function(data, unbiased_control, info) {
                  size = 1.0) +
     geom_line(stat="density",data = unbiased_control, aes(Speed), size = 1.0, colour = "grey50") +
     scale_x_continuous(position = "top", limits = c(0,data.table::first(info$Max_Speed)))+
-    scale_y_continuous(limits = c(0,data.table::first(info$Speed_density_max)))+
+    scale_y_continuous(limits = c(0,data.table::first(info$Speed_density_max)*1.05))+
     coord_flip() +
     scale_colour_brewer(palette = "Set1")+
     theme_m_right
