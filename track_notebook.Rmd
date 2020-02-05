@@ -1,0 +1,42 @@
+---
+title: ""
+output: html_notebook
+---
+
+# The data  
+All tracks are stored in a single data.table object. Each line represents one track.
+
+```{r}
+head(tracks)
+```
+
+# Statistical distribution of swimming speed 
+The distribution of mean track speed is not normal, which would be a problem for statistics such as t-tests. It seems, however, that mean of log speed takes it much closer to normality. The blue dashed line in the plot below shows fit of normal distribution to the data.
+```{r}
+speed_mean_NON <- tracks[n>60 & Condition == "NON", sapply(Speed, mean)]
+speed_mean_NON_log <- tracks[n>60 & Condition == "NON", sapply(Speed, function(x) mean(log(x)))]
+
+tdn <- testDistribution(speed_mean_NON, "normal")
+plot(tdn)
+tdn <- testDistribution(speed_mean_NON_log, "normal")
+plot(tdn)
+```
+
+# Speed vs shape
+Let's see if there is a correlation between the speed and shape - if it is strong, we could just use speed to compare the lines
+```{r}
+tracks[ n > 60,
+           .(Shape = mean(sapply(DP_simplify, sum)),
+             Log_speed = mean(sapply(Speed, function(x) (mean(log(x))))),
+             Shape_SE = sd(sapply(DP_simplify, sum))/sqrt(length(DP_simplify)),
+             Log_speed_SE = sd(sapply(Speed, function(x) (mean(log(x)))))/sqrt(length(DP_simplify))
+           ),
+           by = .(Line, Condition)
+           ][,ggplot(.SD, aes(Log_speed, Shape, colour = Condition, fill = Condition))+
+               geom_point(shape = 21, colour = 'black', size = 2)+
+               geom_text(aes(label=Line),hjust= -0.1, vjust= -0.1, size = 3.5)+
+               labs(title = "Mean shape and log speed for each cell line")
+             ]
+
+```
+

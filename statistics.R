@@ -93,7 +93,7 @@ log(mean(gmi))
 tdg <- testDistribution(gmi, "gamma")
 plot(tdg)
 
-tdn <- testDistribution(gmi, "normal")
+tdn <- testDistribution(gm, "normal")
 plot(tdn)
 
 
