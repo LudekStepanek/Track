@@ -1,8 +1,8 @@
-globalspeed <- tracks[Experiment%in%c("2019_12_02","2019_12_05") & Condition == "NON", mean(unlist(Speed))]
+globalspeed <- tracks[Condition == "NON", mean(unlist(Speed))]
 
-plot_data_marginals <- tracks[ n > 60 & Experiment %in% c("2019_12_02","2019_12_05"),
+plot_data_marginals <- tracks[ n > 60,
                     .(Shape = sapply(DP_simplify, sum),
-                      Speed = sapply(Speed, function(x) (mean(x))),
+                      Speed = sapply(Speed, function(x) (mean(log(x)))),
                       Control = Condition %in% "NON",
                       
                       n = .N
@@ -17,25 +17,32 @@ plot_data_marginals <- tracks[ n > 60 & Experiment %in% c("2019_12_02","2019_12_
                       
                       by = .(Line, Condition)
                     ][,
-                      n := .N
+                      `:=`(n = .N,
+                        Speed_density = max(density(Speed)$y),
+                        Shape_density = max(density(Shape/25)$y)
+                      )
                       ,
                       by = .(Line, Condition)
                     ][,
                       `:=`(
                         Shape = Shape/25,
-                        Max_Speed = 20,
+                        Max_Speed = log(20),
                         rnd = sample(.N, .N)
                       )
-                      ][,
+                    ][,
                         `:=`(
-                          rank = .SD[Condition == "IND",mean(unlist(Speed))]- globalspeed
+                          rank = .SD[Condition == "IND", mean(unlist(Speed))]- globalspeed
                         ),
                         by = Line
-                        ]
+                    ][,
+                      `:=`(Speed_density = max(Speed_density),
+                           Shape_density = max(Shape_density)
+                           )
+                      ]
 
 setorder(plot_data_marginals,rank,-rnd) #rank - have the pages in the plot ordered by amount of difference
 
-plot_marginals(plot_data_marginals, "marg_new_strains.pdf")
+plot_marginals(plot_data_marginals, "marg_mutants3.pdf")
 
 print_tracks_by_quantile(tracks[ n > 200 & Experiment %in% c("2019_12_02")])
 
