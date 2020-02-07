@@ -40,3 +40,22 @@ tracks[ n > 60,
 
 ```
 
+One can also plot mean for each individual FOV
+
+```{r}
+tracks[ n > 60,
+           .(Shape = mean(sapply(DP_simplify, sum)),
+             Log_speed = mean(sapply(Speed, function(x) (mean(log(x))))),
+             Shape_SE = sd(sapply(DP_simplify, sum))/sqrt(length(DP_simplify)),
+             Log_speed_SE = sd(sapply(Speed, function(x) (mean(log(x)))))/sqrt(length(DP_simplify))
+           ),
+           by = .(Line, Condition, movie = paste(Experiment, Field))
+           ][,ggplot(.SD, aes(Log_speed, Shape, group = movie, colour = Condition))+
+               geom_point()+
+               #geom_errorbar(aes(ymin=Shape-Shape_SE, ymax=Shape+Shape_SE), width=.005) +
+               #geom_errorbarh(aes(xmin=Log_speed - Log_speed_SE, xmax = Log_speed + Log_speed_SE), height=.05) +
+               #geom_text(aes(label=paste(Line, Condition)),hjust= -0.1, vjust= -0.1, size = 0)+
+               facet_wrap(~Line)+
+               labs(title = "Mean shape and log_speed for individual movies")
+             ]
+```
