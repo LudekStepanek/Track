@@ -59,3 +59,39 @@ tracks[ n > 60,
                labs(title = "Mean shape and log_speed for individual movies")
              ]
 ```
+
+# Do the cells speed up during acquisition?
+It looks like they speed up during first three movies. Perhaps the slide is warming up.
+
+```{r}
+tracks[ n > 60 & Condition == 'NON',
+        .(
+          Shape = (sapply(DP_simplify, sum)),
+          Speed = (sapply(Speed, function(x) (mean((x)))))
+        ),
+        by = .(Line, Condition, movie = Field)
+        ][,
+          ggplot(.SD)+
+            geom_boxplot(aes(factor(movie, levels = 1:20), Speed))+
+            labs(title = "Mean speed by imaging position")+
+            theme(legend.position = 'none')
+          ]
+```
+
+One can zoom in using command coord_cartesian(ylim=c(3, 8)) 
+
+```{r}
+tracks[ n > 60 & Condition == 'NON',
+        .(
+          Shape = (sapply(DP_simplify, sum)),
+          Speed = (sapply(Speed, function(x) (mean((x)))))
+        ),
+        by = .(Line, Condition, movie = Field)
+        ][,
+          ggplot(.SD)+
+            geom_boxplot(aes(factor(movie, levels = 1:20), Speed))+
+            labs(title = "Mean speed for individual imaging positions")+
+            theme(legend.position = 'none')+
+            coord_cartesian(ylim=c(3, 8))
+          ]
+```

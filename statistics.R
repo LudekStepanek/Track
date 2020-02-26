@@ -158,17 +158,93 @@ fh[,
 
 
 # are speed and shape correlated?
-
+#means per line
 tracks[ n > 60,
            .(Shape = mean(sapply(DP_simplify, sum)),
              Log_speed = mean(sapply(Speed, function(x) (mean(log(x))))),
              Shape_SE = sd(sapply(DP_simplify, sum))/sqrt(length(DP_simplify)),
-             Log_speed_SE = sd(sapply(Speed, function(x) (mean(log(x)))))/sqrt(length(DP_simplify))
+             Log_speed_SE = sd(sapply(Speed, function(x) (mean(log(x)))))/sqrt(length(DP_simplify)),
+             min_Y = min(sapply(DP_simplify, sum)),
+             min_X = min(sapply(Speed, function(x) (mean(log(x))))),
+             max_Y = max(sapply(DP_simplify, sum)),
+             max_X = max(sapply(Speed, function(x) (mean(log(x)))))
            ),
            by = .(Line, Condition)
            ][,ggplot(.SD, aes(Log_speed, Shape, colour = Condition))+
                geom_point()+
                #geom_errorbar(aes(ymin=Shape-Shape_SE, ymax=Shape+Shape_SE), width=.005) +
                #geom_errorbarh(aes(xmin=Log_speed - Log_speed_SE, xmax = Log_speed + Log_speed_SE), height=.05) +
-               geom_text(aes(label=Line),hjust= -0.1, vjust= -0.1, size = 4)
+               geom_text(aes(label=Line),hjust= -0.1, vjust= -0.1, size = 4) + 
+               scale_x_continuous( limits = c(first(min_X), first(max_X))) +
+               scale_y_continuous( limits = c(first(min_Y), first(max_Y)))
              ]
+
+# per movie
+tracks[ n > 60,
+        .(Shape = mean(sapply(DP_simplify, sum)),
+          Log_speed = mean(sapply(Speed, function(x) (mean(log(x))))),
+          Shape_SE = sd(sapply(DP_simplify, sum))/sqrt(length(DP_simplify)),
+          Log_speed_SE = sd(sapply(Speed, function(x) (mean(log(x)))))/sqrt(length(DP_simplify)),
+          min_Y = min(sapply(DP_simplify, sum)),
+          min_X = min(sapply(Speed, function(x) (mean(log(x))))),
+          max_Y = max(sapply(DP_simplify, sum)),
+          max_X = max(sapply(Speed, function(x) (mean(log(x)))))
+        ),
+        by = .(Line, Condition, movie = paste(Experiment, Field))
+        ][,ggplot(.SD, aes(Log_speed, Shape, group = movie, colour = Condition))+
+            geom_point()+
+            #geom_errorbar(aes(ymin=Shape-Shape_SE, ymax=Shape+Shape_SE), width=.005) +
+            #geom_errorbarh(aes(xmin=Log_speed - Log_speed_SE, xmax = Log_speed + Log_speed_SE), height=.05) +
+            #geom_text(aes(label=paste(Line, Condition)),hjust= -0.1, vjust= -0.1, size = 0)+
+            facet_wrap(~Line)+
+            labs(title = "Mean shape and log_speed for individual movies")+
+            
+            scale_x_continuous( limits = c(first(min_X), first(max_X))) +
+            scale_y_continuous( limits = c(first(min_Y), first(max_Y)))
+          ]
+
+#individual tracks
+tracks[ n > 60 & Line == '3870',
+        .(Shape_mean = mean(sapply(DP_simplify, sum)),
+          Log_speed_mean = mean(sapply(Speed, function(x) (mean(log(x))))),
+          Shape = (sapply(DP_simplify, sum)),
+          Log_speed = (sapply(Speed, function(x) (mean(log(x)))))
+          
+        ),
+        by = .(Line, Condition, movie = paste(Experiment, Field))
+        ][,ggplot(.SD, aes(Log_speed_mean, Shape_mean, group = movie, colour = movie))+
+            
+            geom_point(aes(Log_speed, Shape, colour = Condition), size = 0.1, alpha = 0.2)+
+            geom_point(colour = "black")+
+            facet_wrap(~movie)+
+            labs(title = "Mean shape and log_speed for individual movies")+
+            theme(legend.position = 'none')
+          ]
+
+tracks[ n > 60 & Condition == 'NON',
+        .(
+          Shape = (sapply(DP_simplify, sum)),
+          Speed = (sapply(Speed, function(x) (mean((x)))))
+        ),
+        by = .(Line, Condition, movie = Field)
+        ][,
+          ggplot(.SD)+
+            geom_boxplot(aes(factor(movie, levels = 1:20), Speed))+
+            labs(title = "Mean speed for individual imaging positions")+
+            theme(legend.position = 'none')+
+            coord_cartesian(ylim=c(3, 8))
+          ]
+
+tracks[ n > 60 & Condition == 'NON',
+        .(
+          Shape = (sapply(DP_simplify, sum)),
+          Speed = (sapply(Speed, function(x) (mean((x)))))
+        ),
+        by = .(Line, Condition, movie = Field)
+        ][,
+          ggplot(.SD)+
+            geom_boxplot(aes(factor(movie, levels = 1:20), Shape))+
+            labs(title = "Mean speed for individual imaging positions")+
+            theme(legend.position = 'none')+
+            coord_cartesian(ylim=c(7, 17))
+          ]
